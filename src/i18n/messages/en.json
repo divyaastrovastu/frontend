@@ -1,0 +1,74 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "book": "Book",
+    "blog": "Blog",
+    "gallery": "Gallery",
+    "testimonials": "Testimonials",
+    "contact": "Contact",
+    "faq": "FAQ",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "whatsapp": "Chat on WhatsApp"
+  },
+  "home": {
+    "heroTitle": "Discover Your Path Through the Wisdom of Astrology",
+    "heroSubtitle": "ONE STOP ASTRO-VASTU SOLUTION FOR EVERY LIFE CHALLENGE",
+    "ctaBook": "Book Consultation",
+    "ctaWhatsapp": "Chat on WhatsApp",
+    "introTitle": "About the Astrologer",
+    "introBody": "Dr. Jaiprakaash Dwivedi, Ph.D.(Japan), is a modern astrologer and professional Vastu consultant offering integrated Jyotish and Vastu guidance for every life challenge.",
+    "servicesTitle": "Astrology & Vastu Services",
+    "servicesBody": "Choose a consultation tailored to your question — kundli, marriage, career, finance, Vastu, and personalised horoscope.",
+    "whyTitle": "Why Choose DIVYA ASTRO VASTU",
+    "why1": "Blend of classical Jyotish and practical Vastu",
+    "why2": "Clear, modern guidance you can apply in daily life",
+    "why3": "Confidential consultations with structured follow-up",
+    "testimonialsTitle": "What Clients Say",
+    "blogTitle": "Latest Insights",
+    "ctaTitle": "Ready for clarity?",
+    "ctaBody": "Book a consultation or message us on WhatsApp to get started.",
+    "contactTitle": "Visit & Contact",
+    "photoPending": "Astrologer photo will appear here after it is uploaded from the admin panel."
+  },
+  "about": {
+    "title": "About DIVYA ASTRO VASTU",
+    "subtitle": "ज्योतिष और वास्तु का समन्वय — guidance rooted in knowledge and practicality",
+    "body": "DIVYA ASTRO VASTU brings together astrology and Vastu under the guidance of Dr. Jaiprakaash Dwivedi, Ph.D.(Japan). The practice focuses on clear diagnosis, actionable remedies, and respectful counselling for individuals and families."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Reach out for consultations, Vastu visits, or general enquiries.",
+    "formTitle": "Send a message",
+    "nameLabel": "Name",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "subjectLabel": "Subject",
+    "messageLabel": "Message",
+    "submit": "Send enquiry",
+    "success": "Thank you. We will get back to you shortly."
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "loading": "Loading…",
+    "language": "Language",
+    "english": "English",
+    "hindi": "हिन्दी",
+    "gujarati": "ગુજરાતી",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "hours": "Consultation hours",
+    "hoursPending": "Consultation hours will be published soon."
+  },
+  "footer": {
+    "rights": "All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "refund": "Refund Policy"
+  }
+}
