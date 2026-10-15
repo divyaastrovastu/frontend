@@ -46,10 +46,9 @@ export function AstrologySlider({ slides }: { slides: AstrologySlide[] }) {
     <section className="bg-navy py-14 text-white md:py-16">
       <div className="container-page">
         <div className="mb-8 max-w-2xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gold">Insights</p>
           <h2 className="mt-2 font-serif text-3xl text-white md:text-4xl">Astrology highlights</h2>
           <p className="mt-2 text-sm text-white/70">
-            Daily wisdom and guidance — updated from the admin panel.
+            Daily wisdom and guidance.
           </p>
         </div>
 
