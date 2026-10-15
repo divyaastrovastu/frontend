@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { apiPatch, API_URL, getStoredToken } from '@/lib/api';
-import { useBranding } from '@/lib/branding';import { Button } from '@/components/ui/Button';
+import { useBranding } from '@/lib/branding';
+import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { useToast } from '@/components/ui/Toast';
-import { getErrorMessage } from '@/lib/utils';
+import { getErrorMessage, resolveMediaUrl } from '@/lib/utils';
 import type { BusinessConfig } from '@/lib/businessConfig';
 
 export default function BrandingSettingsPage() {
@@ -14,7 +15,8 @@ export default function BrandingSettingsPage() {
   const { branding, refresh } = useBranding();
   const [form, setForm] = useState<Partial<BusinessConfig>>(branding);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [uploadingHome, setUploadingHome] = useState(false);
+  const [uploadingAbout, setUploadingAbout] = useState(false);
 
   useEffect(() => {
     setForm(branding);
@@ -32,9 +34,10 @@ export default function BrandingSettingsPage() {
         facebook: form.socialLinks?.facebook,
         instagram: form.socialLinks?.instagram,
         youtube: form.socialLinks?.youtube,
-        experienceYears: form.experienceYears === null || form.experienceYears === ('' as never)
-          ? null
-          : Number(form.experienceYears),
+        experienceYears:
+          form.experienceYears === null || form.experienceYears === ('' as never)
+            ? null
+            : Number(form.experienceYears),
       });
       await refresh();
       toast.success('Branding saved');
@@ -45,14 +48,15 @@ export default function BrandingSettingsPage() {
     }
   }
 
-  async function onUpload(file: File | null) {
+  async function onUpload(slot: 'home' | 'about', file: File | null) {
     if (!file) return;
+    const setUploading = slot === 'home' ? setUploadingHome : setUploadingAbout;
     try {
       setUploading(true);
       const body = new FormData();
       body.append('photo', file);
       const token = getStoredToken();
-      const res = await fetch(`${API_URL}/admin/branding/photo`, {
+      const res = await fetch(`${API_URL}/admin/branding/photo?slot=${slot}`, {
         method: 'POST',
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         body,
@@ -60,7 +64,7 @@ export default function BrandingSettingsPage() {
       const json = await res.json();
       if (!res.ok || !json.success) throw new Error(json.message || 'Upload failed');
       await refresh();
-      toast.success('Astrologer photo uploaded');
+      toast.success(`${slot === 'home' ? 'Home' : 'About'} photo uploaded`);
     } catch (err) {
       toast.error(getErrorMessage(err, 'Photo upload failed'));
     } finally {
@@ -68,12 +72,8 @@ export default function BrandingSettingsPage() {
     }
   }
 
-  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1$/, '') || 'http://localhost:4000';
-  const photoPreview = form.astrologerPhotoUrl
-    ? form.astrologerPhotoUrl.startsWith('/uploads')
-      ? `${apiBase}${form.astrologerPhotoUrl}`
-      : form.astrologerPhotoUrl
-    : '';
+  const homePreview = resolveMediaUrl(form.homePhotoUrl || form.astrologerPhotoUrl || '');
+  const aboutPreview = resolveMediaUrl(form.aboutPhotoUrl || '');
 
   return (
     <div className="space-y-6">
@@ -141,10 +141,7 @@ export default function BrandingSettingsPage() {
               className="w-full rounded-md border border-border px-3 py-2 text-sm"
               value={form.consultationMode || 'WHATSAPP'}
               onChange={(e) =>
-                setField(
-                  'consultationMode',
-                  e.target.value as BusinessConfig['consultationMode']
-                )
+                setField('consultationMode', e.target.value as BusinessConfig['consultationMode'])
               }
             >
               <option value="WHATSAPP">WhatsApp video / chat</option>
@@ -166,7 +163,8 @@ export default function BrandingSettingsPage() {
               value={form.addressLine || ''}
               onChange={(e) => setField('addressLine', e.target.value)}
             />
-          </div>          <Input label="City" value={form.city || ''} onChange={(e) => setField('city', e.target.value)} />
+          </div>
+          <Input label="City" value={form.city || ''} onChange={(e) => setField('city', e.target.value)} />
           <Input label="State" value={form.state || ''} onChange={(e) => setField('state', e.target.value)} />
           <Input label="Pincode" value={form.pincode || ''} onChange={(e) => setField('pincode', e.target.value)} />
           <Input
@@ -246,27 +244,47 @@ export default function BrandingSettingsPage() {
 
       <Card>
         <CardHeader
-          title="Astrologer photo"
-          description="Upload a clear portrait (JPEG/PNG/WebP, max 5MB). Shown on Home and About."
+          title="Website portraits"
+          description="Upload separate photos for Home and About. Files are stored on Cloudinary so they stay online after Render restarts."
         />
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
-          <div className="relative h-48 w-40 overflow-hidden rounded-xl border border-border bg-ivory">
-            {photoPreview ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={photoPreview} alt="Astrologer" className="h-full w-full object-cover" />
-            ) : (
-              <div className="flex h-full items-center justify-center p-3 text-center text-xs text-muted">
-                No photo uploaded
-              </div>
-            )}
-          </div>
-          <div>
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-navy">Home page photo</p>
+            <div className="relative h-48 w-40 overflow-hidden rounded-xl border border-border bg-ivory">
+              {homePreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={homePreview} alt="Home" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full items-center justify-center p-3 text-center text-xs text-muted">
+                  No home photo
+                </div>
+              )}
+            </div>
             <input
               type="file"
               accept="image/jpeg,image/png,image/webp"
-              onChange={(e) => void onUpload(e.target.files?.[0] || null)}
+              onChange={(e) => void onUpload('home', e.target.files?.[0] || null)}
             />
-            <p className="mt-2 text-xs text-muted">{uploading ? 'Uploading…' : 'Recommended: vertical portrait photo.'}</p>
+            <p className="text-xs text-muted">{uploadingHome ? 'Uploading…' : 'Shown on the homepage hero.'}</p>
+          </div>
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-navy">About page photo</p>
+            <div className="relative h-48 w-40 overflow-hidden rounded-xl border border-border bg-ivory">
+              {aboutPreview ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={aboutPreview} alt="About" className="h-full w-full object-cover" />
+              ) : (
+                <div className="flex h-full items-center justify-center p-3 text-center text-xs text-muted">
+                  No about photo
+                </div>
+              )}
+            </div>
+            <input
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={(e) => void onUpload('about', e.target.files?.[0] || null)}
+            />
+            <p className="text-xs text-muted">{uploadingAbout ? 'Uploading…' : 'Shown on the About page.'}</p>
           </div>
         </div>
       </Card>

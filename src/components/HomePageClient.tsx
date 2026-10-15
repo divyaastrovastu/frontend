@@ -6,31 +6,30 @@ import { Shield, Clock, Star } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ServiceCard } from '@/components/ServiceCard';
 import { TestimonialCard } from '@/components/TestimonialCard';
+import { AstrologySlider, type AstrologySlide } from '@/components/AstrologySlider';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { useBranding } from '@/lib/branding';
 import { useI18n } from '@/i18n/I18nProvider';
 import { localizedAstrologerName, localizedTagline, formatBusinessAddress } from '@/lib/businessConfig';
-import { whatsappUrl } from '@/lib/utils';
+import { resolveMediaUrl, whatsappUrl } from '@/lib/utils';
 import type { Service, Testimonial } from '@/types';
 
 export function HomePageClient({
   services,
   testimonials,
+  slides = [],
 }: {
   services: Service[];
   testimonials: Testimonial[];
+  slides?: AstrologySlide[];
 }) {
   const { branding } = useBranding();
   const { t, locale } = useI18n();
   const name = localizedAstrologerName(locale, branding);
   const tagline = localizedTagline(locale, branding);
-  const photo = branding.astrologerPhotoUrl;
-  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1$/, '') || 'http://localhost:4000';
-  const photoSrc = photo
-    ? photo.startsWith('/uploads')
-      ? `${apiBase}${photo}`
-      : photo
-    : '';
+  const photo =
+    branding.homePhotoUrl || branding.astrologerPhotoUrl || '';
+  const photoSrc = resolveMediaUrl(photo);
 
   return (
     <>
@@ -81,7 +80,9 @@ export function HomePageClient({
                   className="object-cover"
                   sizes="(max-width: 768px) 90vw, 420px"
                   priority
-                  unoptimized={photoSrc.includes('localhost')}
+                  unoptimized={
+                    photoSrc.includes('localhost') || photoSrc.includes('res.cloudinary.com')
+                  }
                 />
               ) : (
                 <div className="flex h-full flex-col items-center justify-center px-8 text-center">
@@ -94,6 +95,8 @@ export function HomePageClient({
           </div>
         </div>
       </section>
+
+      <AstrologySlider slides={slides} />
 
       <section className="container-page py-16 md:py-20">
         <div className="mx-auto max-w-3xl text-center">

@@ -1,4 +1,5 @@
 import { HomePageClient } from '@/components/HomePageClient';
+import type { AstrologySlide } from '@/components/AstrologySlider';
 import type { Service, Testimonial } from '@/types';
 
 async function fetchSafe<T>(path: string): Promise<T | null> {
@@ -14,9 +15,10 @@ async function fetchSafe<T>(path: string): Promise<T | null> {
 }
 
 export default async function HomePage() {
-  const [servicesData, testimonialsData] = await Promise.all([
+  const [servicesData, testimonialsData, sliderData] = await Promise.all([
     fetchSafe<Service[] | { items: Service[] }>('/services'),
     fetchSafe<Testimonial[] | { items: Testimonial[] }>('/testimonials'),
+    fetchSafe<{ slides: AstrologySlide[] }>('/home-slider'),
   ]);
 
   const services = (Array.isArray(servicesData) ? servicesData : servicesData?.items || [])
@@ -29,5 +31,7 @@ export default async function HomePage() {
     .filter((t) => t.status === 'APPROVED' || t.isFeatured)
     .slice(0, 3);
 
-  return <HomePageClient services={services} testimonials={testimonials} />;
+  const slides = sliderData?.slides || [];
+
+  return <HomePageClient services={services} testimonials={testimonials} slides={slides} />;
 }

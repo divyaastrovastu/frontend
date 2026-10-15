@@ -7,17 +7,15 @@ import { Button } from '@/components/ui/Button';
 import { useBranding } from '@/lib/branding';
 import { useI18n } from '@/i18n/I18nProvider';
 import { localizedAstrologerName } from '@/lib/businessConfig';
+import { resolveMediaUrl } from '@/lib/utils';
 
 export default function AboutPage() {
   const { branding } = useBranding();
   const { t, locale } = useI18n();
   const name = localizedAstrologerName(locale, branding);
-  const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/api\/v1$/, '') || 'http://localhost:4000';
-  const photoSrc = branding.astrologerPhotoUrl
-    ? branding.astrologerPhotoUrl.startsWith('/uploads')
-      ? `${apiBase}${branding.astrologerPhotoUrl}`
-      : branding.astrologerPhotoUrl
-    : '';
+  const photoSrc = resolveMediaUrl(
+    branding.aboutPhotoUrl || branding.astrologerPhotoUrl || branding.homePhotoUrl || ''
+  );
 
   return (
     <>
@@ -48,7 +46,9 @@ export default function AboutPage() {
                 fill
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 480px"
-                unoptimized={photoSrc.includes('localhost')}
+                unoptimized={
+                  photoSrc.includes('localhost') || photoSrc.includes('res.cloudinary.com')
+                }
               />
             ) : (
               <div className="flex h-full items-center justify-center px-6 text-center text-sm text-charcoal/70">

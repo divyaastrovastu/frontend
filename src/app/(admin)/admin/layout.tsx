@@ -45,6 +45,7 @@ const nav = [
   { href: '/admin/campaigns', label: 'Campaigns', icon: Megaphone },
   { href: '/admin/settings/content', label: 'Website content', icon: FileText },
   { href: '/admin/settings/branding', label: 'Branding', icon: Settings },
+  { href: '/admin/settings/slider', label: 'Home slider', icon: Image },
   { href: '/admin/settings/seo', label: 'SEO', icon: Search },
 ];
 

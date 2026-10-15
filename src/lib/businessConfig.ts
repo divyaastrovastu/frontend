@@ -36,7 +36,10 @@ export const businessConfig = {
   },
   logo: '/images/logo.png',
   favicon: '/favicon.ico',
+  /** @deprecated Prefer homePhotoUrl */
   astrologerPhotoUrl: '',
+  homePhotoUrl: '',
+  aboutPhotoUrl: '',
   websiteUrl: 'https://divyaastrovastu.com',
   /** WHATSAPP | GOOGLE_MEET | ZOOM | PHONE | IN_PERSON */
   consultationMode: 'WHATSAPP' as 'WHATSAPP' | 'GOOGLE_MEET' | 'ZOOM' | 'PHONE' | 'IN_PERSON',
